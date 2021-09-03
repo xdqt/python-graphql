@@ -1,0 +1,54 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Mutation {
+    createPost(title: String!, description: String!,parent_id:ID!, created_at: String): PostResult!
+    updatePost(id: ID!, title: String, description: String): PostResult!
+}
+
+
+
+type Query {
+    listPosts: PostsResult!
+    getPost(id: ID!): PostResult!
+    listUsers: UserResult!
+}
+
+
+type Post {
+    id: ID!
+    parent_id: ID!
+    title: String!
+    description: String!
+    created_at: String!
+}
+
+
+type User {
+    id: ID!
+    name: ID!
+    posts:[Post]
+}
+
+
+
+type UserResult {
+    success: Boolean!
+    errors: [String]
+    post: [User]
+}
+
+type PostResult {
+    success: Boolean!
+    errors: [String]
+    post: Post
+}
+
+type PostsResult {
+    success: Boolean!
+    errors: [String]
+    post: [Post]
+}
+
