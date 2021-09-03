@@ -1,4 +1,4 @@
-from __main__ import mas
+from app import mas
 
 from model.Models import Post,User
 
