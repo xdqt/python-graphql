@@ -1,7 +1,7 @@
 from app import app,db
 from Query.Queries import listPosts_resolver,getPost_resolver,listUsers_resolver
 
-from Mutation.Mutations import create_post_resolver,update_post_resolver
+from Mutation.Mutations import create_post_resolver,update_post_resolver,create_user_resolver
 
 from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, snake_case_fallback_resolvers, ObjectType
@@ -27,6 +27,7 @@ mutation.set_field("createPost",create_post_resolver)
 
 mutation.set_field("updatePost",update_post_resolver)
 
+mutation.set_field("createUser",create_user_resolver)
 
 type_defs = load_schema_from_path("schema.graphql")
 schema = make_executable_schema(

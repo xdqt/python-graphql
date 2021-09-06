@@ -5,9 +5,22 @@ schema {
 
 type Mutation {
     createPost(title: String!, description: String!,parent_id:ID!, created_at: String): PostResult!
+
     updatePost(id: ID!, title: String, description: String): PostResult!
+
+    createUser(input: UserInput!): UserPayload!
 }
 
+type UserPayload {
+    success: Boolean!
+    errors: [String]
+    post: User!
+}
+
+input UserInput {
+    id: ID!
+    name: ID!
+}
 
 
 type Query {

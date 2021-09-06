@@ -1,9 +1,11 @@
-from model.Models import Post
+from model.Models import Post, User
 
 from datetime import date
 from ariadne import convert_kwargs_to_snake_case
 
 from SQL.sql import Database
+
+from Schemas.schemas import UserSchema
 
 @convert_kwargs_to_snake_case
 def create_post_resolver(obj, info, title, description,parent_id):
@@ -40,6 +42,29 @@ def update_post_resolver(obj, info, id, title, description):
         payload = {
             "success": True,
             "post": post.to_dict()
+        }
+    except AttributeError:  # todo not found
+        payload = {
+            "success": False,
+            "errors": ["item matching id {id} not found"]
+        }
+    return payload
+
+
+
+
+
+@convert_kwargs_to_snake_case
+def create_user_resolver(obj, info, input):
+    try:
+        userschema = UserSchema()
+        print(input)
+        uservalue = userschema.load(input)
+        
+        Database().insert(uservalue)
+        payload = {
+            "success": True,
+            "post": input
         }
     except AttributeError:  # todo not found
         payload = {
