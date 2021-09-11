@@ -57,11 +57,11 @@ def update_post_resolver(obj, info, id, title, description):
 @convert_kwargs_to_snake_case
 def create_user_resolver(obj, info, input):
     try:
-        userschema = UserSchema()
+        userschema = UserSchema(many=True)
         print(input)
         uservalue = userschema.load(input)
         
-        Database().insert(uservalue)
+        Database().insertmany(uservalue)
         payload = {
             "success": True,
             "post": input

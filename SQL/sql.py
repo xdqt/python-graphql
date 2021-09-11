@@ -24,6 +24,13 @@ class Database:
     def query(self,obj,filter):
         return obj.query.filter(filter).first()
     
+    def querymany(self,obj,filter):
+        return obj.query.filter(filter).all()
+    
+    
+    def querybyPrimaryKey(self,obj,keyValue):
+         return obj.query.get(keyValue)
+    
     
     def queryand(self,obj,filter):
-        ...
+         return obj.query.filter(filter).all()

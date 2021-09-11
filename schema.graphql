@@ -8,24 +8,25 @@ type Mutation {
 
     updatePost(id: ID!, title: String, description: String): PostResult!
 
-    createUser(input: UserInput!): UserPayload!
+    createUser(input: [UserInput]!): UserPayload!
 }
 
 type UserPayload {
     success: Boolean!
     errors: [String]
-    post: User!
+    post: [User]!
 }
 
 input UserInput {
     id: ID!
-    name: ID!
+    name: String!
 }
 
 
 type Query {
     listPosts: PostsResult!
-    getPost(id: ID!): PostResult!
+    getPostByFilters(title: String!,parent_id:ID!): PostsResult!
+    getPost(id:ID!): PostResult!
     listUsers: UserResult!
 }
 
@@ -58,6 +59,7 @@ type PostResult {
     errors: [String]
     post: Post
 }
+
 
 type PostsResult {
     success: Boolean!

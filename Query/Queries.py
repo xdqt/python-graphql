@@ -2,12 +2,13 @@ from model.Models import Post,User
 from ariadne import convert_kwargs_to_snake_case
 from SQL.sql import Database
 from Schemas.schemas import UserSchema,PostSchema
+from sqlalchemy import and_
 
 @convert_kwargs_to_snake_case
-def getPost_resolver(obj, info, id):
+def getPost_resolver(obj, info, title,parent_id):
     try:
-        post = Database().query(Post,Post.id==id)
-        #post = Post.query.get(id)
+        # post = Database().query(Post,Post.id==id)
+        post = Database().querybyPrimaryKey(Post,id)
         postschema = PostSchema()
         
         payload = {
@@ -20,6 +21,33 @@ def getPost_resolver(obj, info, id):
             "errors": ["Post item matching {id} not found"]
         }
     return payload
+
+
+
+@convert_kwargs_to_snake_case
+def getPostFilters(obj, info, title,parent_id):
+    try:
+        # post = Database().query(Post,Post.id==id)
+        post = Database().queryand(Post,and_(Post.title==title,Post.parent_id==parent_id))
+        postschema = PostSchema(many=True)
+        
+        payload = {
+            "success": True,
+            "post": postschema.dump(post)
+        }
+    except AttributeError:  # todo not found
+        payload = {
+            "success": False,
+            "errors": ["Post item matching {id} not found"]
+        }
+    return payload
+
+
+
+
+
+
+
 
 
 def listUsers_resolver(obj, info):

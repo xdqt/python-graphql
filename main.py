@@ -1,5 +1,5 @@
 from app import app,db
-from Query.Queries import listPosts_resolver,getPost_resolver,listUsers_resolver
+from Query.Queries import listPosts_resolver,getPost_resolver,listUsers_resolver,getPostFilters
 
 from Mutation.Mutations import create_post_resolver,update_post_resolver,create_user_resolver
 
@@ -19,6 +19,8 @@ query.set_field("listPosts", listPosts_resolver)
 query.set_field("getPost", getPost_resolver)
 
 query.set_field("listUsers", listUsers_resolver)
+
+query.set_field('getPostByFilters',getPostFilters)
 
 
 mutation = ObjectType("Mutation")
