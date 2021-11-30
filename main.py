@@ -9,8 +9,15 @@ from ariadne.constants import PLAYGROUND_HTML
 
 from flask import request, jsonify
 
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+from flask_jwt_extended import set_access_cookies
+from flask_jwt_extended import unset_jwt_cookies,get_jwt_identity,get_jwt
+
 db.create_all()
 
+jwt = JWTManager(app)
 
 query = ObjectType("Query")
 
@@ -37,10 +44,12 @@ schema = make_executable_schema(
 )
 
 @app.route("/graphql", methods=["GET"])
+@jwt_required()
 def graphql_playground():
     return PLAYGROUND_HTML, 200
 
 @app.route("/graphql", methods=["POST"])
+@jwt_required()
 def graphql_server():
     data = request.get_json()
     success, result = graphql_sync(
@@ -51,6 +60,42 @@ def graphql_server():
     )
     status_code = 200 if success else 400
     return jsonify(result), status_code
+
+
+
+@app.route("/login_without_cookies", methods=["POST"])
+def login_without_cookies():
+    # You can use the additional_claims argument to either add
+    # custom claims or override default claims in the JWT.
+    additional_claims = {"aud": "some_audience", "foo": "bar"}
+    access_token = create_access_token("test", additional_claims=additional_claims)
+    return jsonify(access_token=access_token)
+
+
+
+
+
+@app.route("/logout_with_cookies", methods=["POST"])
+def logout_with_cookies():
+    response = jsonify({"msg": "logout successful"})
+    unset_jwt_cookies(response)
+    return response
+
+
+@app.route("/protected", methods=["GET", "POST"])
+@jwt_required()
+def protected():
+    claims = get_jwt()
+    return jsonify(foo=claims["foo"])
+    # current_user = get_jwt_identity()
+    # return jsonify(logged_in_as=current_user), 200
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
